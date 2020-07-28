@@ -1,29 +1,42 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
-  </div>
+  <v-app id="app" :style="`background: ${backgroundColor};`">
+    <v-row no-gutters>
+      <v-col class="grow">
+        <v-row no-gutters class="flex-column" style="min-height: 100vh">
+          <v-col cols="auto">
+            <logo/>
+          </v-col>
+          <v-col class="grow d-flex align-center">
+            <router-view/>
+          </v-col>
+          <v-col class="shrink" v-if="showStepper">
+            <stepper/>
+          </v-col>
+        </v-row>
+      </v-col>
+      <v-col class="shrink">
+        <aside-nav/>
+      </v-col>
+    </v-row>
+  </v-app>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import HelloWorld from './components/HelloWorld.vue';
+import { Component, Vue } from 'vue-property-decorator'
+import Logo from '@/components/Logo.vue'
+import AsideNav from '@/components/AsideNav.vue'
+import Stepper from '@/components/Stepper.vue'
 
 @Component({
-  components: {
-    HelloWorld,
-  },
+  components: { Stepper, AsideNav, Logo }
 })
-export default class App extends Vue {}
-</script>
+export default class App extends Vue {
+  get showStepper (): boolean {
+    return this.$route.meta && this.$route.meta.showStepper && this.$vuetify.breakpoint.mdAndUp
+  }
 
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  get backgroundColor (): string {
+    return this.$route.meta && this.$route.meta.backgroundColor ? this.$route.meta.backgroundColor : '#FFFFFF'
+  }
 }
-</style>
+</script>
